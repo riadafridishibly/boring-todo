@@ -2,11 +2,13 @@
   import { create } from "../stores/store";
   import { link } from "svelte-spa-router";
 
-  let value: string =
+  export let openModal;
+
+  export let title: string =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit.";
   let submittedValue = null;
   const handleSubmit = () => {
-    submittedValue = value;
+    submittedValue = title;
   };
 </script>
 
@@ -32,7 +34,7 @@
   <form class="relative flex-grow" on:submit|preventDefault={handleSubmit}>
     <label class="inline">
       <input
-        bind:value
+        bind:value={title}
         class="py-3 px-5 text-2xl font-light outline-none focus:border-b-2 border-b-2 border-b-gray-400 focus:border-b-black w-full"
         placeholder="Add new todo"
       />
@@ -57,7 +59,7 @@
       >
     </button>
   </form>
-  <button class="flex-none px-4">
+  <button type="button" on:click={openModal} class="flex-none px-4">
     <div class="flex items-center">
       <svg
         class="w-6 h-6 stroke-1 stroke-rose-400"

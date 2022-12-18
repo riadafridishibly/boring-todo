@@ -1,6 +1,6 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
-  import { getAll } from "../stores/store";
+  import { todos } from "../stores/store";
   import TodoInput from "./TodoInput.svelte";
   import TodoItem from "./TodoItem.svelte";
 </script>
@@ -18,18 +18,11 @@
     class="py-5 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-track-gray-100 overflow-y-auto"
   >
     <ul class="list-inside ">
-      {#each $getAll as item}
+      {#each $todos as item}
         <li>
-          <TodoItem message={item.title} done={item.done} date={item.date} />
+          <TodoItem id={item.id} title={item.title} date={item.date} />
         </li>
       {/each}
-      <li>
-        <TodoItem
-          message={"Lorem ipsum dolor sit amet consectetur adipisicing elit."}
-          done
-          date="12-Nov-2022"
-        />
-      </li>
     </ul>
   </div>
 </div>
