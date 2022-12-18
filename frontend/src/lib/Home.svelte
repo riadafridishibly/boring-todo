@@ -18,7 +18,7 @@
     class="py-5 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-track-gray-100 overflow-y-auto"
   >
     <ul class="list-inside ">
-      {#each $todos as item}
+      {#each $todos as item (item.id)}
         <li>
           <TodoItem id={item.id} title={item.title} date={item.date} />
         </li>

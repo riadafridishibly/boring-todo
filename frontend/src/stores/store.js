@@ -11,10 +11,10 @@ function populate() {
     if (dummyData.length > 0) {
         return
     }
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 3; i++) {
         dummyData.push(
             {
-                id: `${i}`,
+                id: `${i +1}`,
                 done: false,
                 title: `Item ${i}`,
                 date: randomDate().toISOString(),
@@ -32,7 +32,7 @@ export let todos = writable(dummyData)
 export const create = async (title) => {
     console.log("CREATED CALLED:", title)
     todos.update(curr => [{
-        id: `${curr.length}`,
+        id: `${curr.length + 1}`,
         done: false,
         date: new Date().toISOString(),
         title: title,
@@ -58,18 +58,24 @@ export const update = async (id, values) => {
     })
 }
 
-export const toggleDone = async (id) => {
-    if (!id) {
-        return null
+export const watchDone = (id) => {
+    return {
+        done: derived(todos, ($todo) => $todo.filter(item => item.id === id)[0].done),
+        toggle: () => toggleDone(id),
     }
+}
+
+export const toggleDone = async (id) => {
     todos.update(curr => {
         let index = curr.findIndex(item => item.id === id)
+        console.log('toggling:', id, index, curr[index])
         if (index < 0) {
             return null
         }
 
         curr[index].done = !curr[index].done
-        return [...curr]
+        let newArray = [...curr]
+        return newArray
     })
 }
 
