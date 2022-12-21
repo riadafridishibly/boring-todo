@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	"github.com/k0kubun/pp/v3"
-	"github.com/riadafridishibly/svelte-todo/db"
+	"github.com/riadafridishibly/boring-todo/db"
 )
 
 type contextKey struct {
@@ -52,9 +52,9 @@ func (api *TodoAPI) Routes() *chi.Mux {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.URLFormat)
-	r.Use(render.SetContentType(render.ContentTypeJSON))
 
 	r.Route("/api/todos", func(r chi.Router) {
+		r.Use(render.SetContentType(render.ContentTypeJSON))
 		r.Get("/", api.ListTodos)
 		r.Post("/", api.CreateTodo) // POST /todo
 		r.Route("/{todoID}", func(r chi.Router) {
