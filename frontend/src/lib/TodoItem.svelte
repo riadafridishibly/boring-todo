@@ -1,26 +1,26 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
-  import { toggleDone, todos } from "../stores/store";
-  import { timeTo } from "../utils/time";
+  import Time from "svelte-time";
+  import { refetch, toggleDone, todos, watchDone } from "../stores/store";
+  import { setDone } from "./api";
   import Icon from "./DoneStatusIcon.svelte";
   export let id: string;
   export let done: boolean = false;
   export let title: string = "";
-  export let date: string = "";
-  todos.subscribe((values) => {
-    let item = values.filter((item) => item.id === id);
-    if (item.length > 0) {
-      console.log("Value", item[0]);
-      done = item[0].done;
-    }
-  });
+  export let createdAt: string = "";
+  const toggle = () => {
+    done = !done;
+    setDone(id, done)
+      .then((v) => console.log(v))
+      .catch((err) => console.error(err));
+  };
 </script>
 
 <!-- Only render if messege is present -->
 {#if title}
   <div class="relative p-4 flex flex-col border-b">
     <div class="flex items-center">
-      <button on:click={() => toggleDone(id)}>
+      <button on:click={() => toggle()}>
         <Icon {done} />
       </button>
       <a href="/todo/{id}" use:link>
@@ -36,7 +36,7 @@
     <div
       class="absolute text-sm text-gray-400 text-right italic right-4 bottom-1"
     >
-      Created {timeTo(date)}
+      <Time live relative timestamp={createdAt} />
     </div>
   </div>
 {/if}

@@ -5,25 +5,25 @@
   import { Editor, Viewer } from "bytemd";
   import gfm from "@bytemd/plugin-gfm";
   import { onDestroy, onMount } from "svelte";
-  import { deleteItem, read } from "../stores/store";
+  import { deleteItem, read, refetch } from "../stores/store";
   import Modal from "./Modal.svelte";
+  import { fetchOneTodo } from "./api";
 
   // USE ONE STOTE FOR HOME PAGE
   // Another custom store for specific page
   export let params;
   console.log(params);
 
-  let todo;
   let title = undefined;
+  let value: string;
 
-  onMount(() => {
-    todo = read(params.id);
-
-    console.log($todo);
-    title = $todo[0];
+  onMount(async () => {
+    const data = await fetchOneTodo(params.id);
+    console.log(data);
+    title = data?.title;
+    value = data?.content;
   });
 
-  let value: string = "# Some title";
   const plugins = [
     gfm(),
     // Add more plugins here
@@ -87,7 +87,7 @@
 {/if}
 
 <div class="w-full h-full flex flex-col">
-  <InlineInput {openModal} title={title?.title} />
+  <InlineInput {openModal} {title} />
   <div class="h-full prose max-w-none">
     <Editor
       uploadImages={uploadImage}

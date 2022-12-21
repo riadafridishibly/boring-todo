@@ -1,11 +1,11 @@
 <script>
-  import Home from "./lib/Home.svelte";
+  import Todos from "./lib/Todos.svelte";
   import Router from "svelte-spa-router";
   import TodoDetails from "./lib/TodoDetails.svelte";
   import { link } from "svelte-spa-router";
 
   const routes = {
-    "/": Home,
+    "/": Todos,
     "/todo/:id": TodoDetails,
   };
 </script>
