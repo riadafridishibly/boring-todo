@@ -12,6 +12,15 @@ export async function fetchOneTodo(id) {
 }
 
 /**
+ * @param {string} id
+ */
+export async function deleteOneTodo(id) {
+  return await (
+    await fetch(`${baseAPIURI}/todos/${id}`, { method: "DELETE" })
+  ).json();
+}
+
+/**
  * @param {string} title
  */
 export async function createTodo(title) {
@@ -20,6 +29,20 @@ export async function createTodo(title) {
       method: "POST",
       body: JSON.stringify({
         title: title,
+      }),
+    })
+  ).json();
+}
+
+/**
+ * @param {string} id
+ */
+export async function updateTodo(id, values) {
+  return await (
+    await fetch(`${baseAPIURI}/todos/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        ...values,
       }),
     })
   ).json();

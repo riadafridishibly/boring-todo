@@ -7,7 +7,7 @@
   import { onDestroy, onMount } from "svelte";
   import { deleteItem, read, refetch } from "../stores/store";
   import Modal from "./Modal.svelte";
-  import { fetchOneTodo } from "./api";
+  import { deleteOneTodo, fetchOneTodo, updateTodo } from "./api";
 
   // USE ONE STOTE FOR HOME PAGE
   // Another custom store for specific page
@@ -38,8 +38,12 @@
     return [{ url: "https://picsum.photos/id/237/200/300" }];
   }
 
-  onDestroy(() => {
-    console.log("I'm goin out");
+  onDestroy(async () => {
+    await updateTodo(params.id, {
+      title: title,
+      content: value,
+    });
+    refetch.set(true);
   });
 
   let showModal = false;
@@ -50,9 +54,15 @@
     showModal = false;
   };
 
+  const onChangeInput = async (value) => {
+    title = value;
+  };
+
   const handleDelete = () => {
-    deleteItem(params.id);
-    closeModal();
+    // deleteItem(params.id);
+    // closeModal();
+    refetch.set(true);
+    deleteOneTodo(params.id);
     push("/");
   };
 </script>
@@ -87,7 +97,7 @@
 {/if}
 
 <div class="w-full h-full flex flex-col">
-  <InlineInput {openModal} {title} />
+  <InlineInput {onChangeInput} {openModal} {title} />
   <div class="h-full prose max-w-none">
     <Editor
       uploadImages={uploadImage}

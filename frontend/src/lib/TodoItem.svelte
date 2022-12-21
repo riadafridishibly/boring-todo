@@ -10,6 +10,7 @@
   export let createdAt: string = "";
   const toggle = () => {
     done = !done;
+    toggleDone(id);
     setDone(id, done)
       .then((v) => console.log(v))
       .catch((err) => console.error(err));

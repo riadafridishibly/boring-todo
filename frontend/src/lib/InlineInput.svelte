@@ -3,9 +3,15 @@
   import { link } from "svelte-spa-router";
 
   export let openModal;
+  export let onChangeInput: (value: string) => void;
 
   export let title: string =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit.";
+
+  $: {
+    onChangeInput(title);
+  }
+
   let submittedValue = null;
   const handleSubmit = () => {
     submittedValue = title;
