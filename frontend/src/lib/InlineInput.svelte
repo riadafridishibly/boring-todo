@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { create } from "../stores/store";
   import { link } from "svelte-spa-router";
 
   export let openModal;

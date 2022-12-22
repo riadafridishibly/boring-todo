@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { push, location, querystring } from "svelte-spa-router";
+  import { push } from "svelte-spa-router";
   import InlineInput from "./InlineInput.svelte";
   import "bytemd/dist/index.css";
-  import { Editor, Viewer } from "bytemd";
+  import { Editor } from "bytemd";
   import gfm from "@bytemd/plugin-gfm";
   import { onDestroy, onMount } from "svelte";
-  import { deleteItem, read, refetch } from "../stores/store";
+  import { refetch } from "../stores/store";
   import Modal from "./Modal.svelte";
   import { deleteOneTodo, fetchOneTodo, updateTodo } from "./api";
 
-  // USE ONE STOTE FOR HOME PAGE
-  // Another custom store for specific page
   export let params;
   console.log(params);
 
@@ -24,10 +22,7 @@
     value = data?.content;
   });
 
-  const plugins = [
-    gfm(),
-    // Add more plugins here
-  ];
+  const plugins = [gfm()];
 
   function handleChange(e) {
     value = e.detail.value;
@@ -38,7 +33,12 @@
     return [{ url: "https://picsum.photos/id/237/200/300" }];
   }
 
+  let deleting = false;
+
   onDestroy(async () => {
+    if (deleting) {
+      return;
+    }
     await updateTodo(params.id, {
       title: title,
       content: value,
@@ -59,8 +59,7 @@
   };
 
   const handleDelete = () => {
-    // deleteItem(params.id);
-    // closeModal();
+    deleting = true;
     refetch.set(true);
     deleteOneTodo(params.id);
     push("/");

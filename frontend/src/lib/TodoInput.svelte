@@ -24,7 +24,6 @@
 
   <button
     class="absolute right-0 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-    on:click={() => console.log("button clicked")}
   >
     <svg
       class="w-9 h-9 cursor-pointer stroke-orange-500 stroke-1 "

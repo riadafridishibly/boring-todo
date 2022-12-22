@@ -1,7 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
   import Time from "svelte-time";
-  import { refetch, toggleDone, todos, watchDone } from "../stores/store";
+  import { toggleDone } from "../stores/store";
   import { setDone } from "./api";
   import Icon from "./DoneStatusIcon.svelte";
   export let id: string;

@@ -9,7 +9,6 @@
   onMount(async () => {
     if ($todos.length === 0 || $refetch) {
       const values = await fetchAllTodos();
-      console.log(values);
       $todos = values;
       $refetch = false;
     }
