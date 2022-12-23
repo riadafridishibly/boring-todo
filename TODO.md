@@ -6,6 +6,7 @@
 - [ ] Use different markdown editor plugins
 - [ ] Render the editor in shadow dom?
 - [ ] Implement an error page
+- [ ] Improve the API call strategy
 
 ## Backend
 
