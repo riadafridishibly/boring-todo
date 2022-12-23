@@ -11,13 +11,13 @@
 </script>
 
 <form
-  class="relative flex-shrink-0 min-w-full border-2"
+  class="relative p-1 flex-shrink-0 min-w-full"
   on:submit|preventDefault={handleSubmit}
 >
   <label class="inline">
     <input
       bind:value
-      class="py-3 px-5 text-xl outline-none focus:border-2 border-2 border-transparent focus:border-black w-full"
+      class="py-4 px-8 text-xl outline-none focus:border-2 border-2 border-gray-200 focus:border-gray-600 w-full"
       placeholder="Add new todo"
     />
   </label>

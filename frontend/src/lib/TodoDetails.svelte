@@ -15,11 +15,16 @@
   let title = undefined;
   let value: string;
 
+  let titleOrig = "";
+  let valueOrig = "";
+
   onMount(async () => {
     const data = await fetchOneTodo(params.id);
     console.log(data);
     title = data?.title;
     value = data?.content;
+    titleOrig = title;
+    valueOrig = value;
   });
 
   const plugins = [gfm()];
@@ -37,6 +42,10 @@
 
   onDestroy(async () => {
     if (deleting) {
+      return;
+    }
+    // Nothing changed
+    if (title === titleOrig && value === valueOrig) {
       return;
     }
     await updateTodo(params.id, {
@@ -60,8 +69,10 @@
 
   const handleDelete = () => {
     deleting = true;
-    refetch.set(true);
-    deleteOneTodo(params.id);
+    (async () => {
+      await deleteOneTodo(params.id);
+      refetch.set(true);
+    })();
     push("/");
   };
 </script>

@@ -33,7 +33,8 @@
           d="M15 19l-7-7 7-7"
         /></svg
       >
-      <span class="text-2xl font-light px-1">Go Back</span>
+      <span class="text-2xl hidden lg:inline-flex font-light px-1">Go Back</span
+      >
     </div>
   </a>
   <form class="relative flex-grow" on:submit|preventDefault={handleSubmit}>

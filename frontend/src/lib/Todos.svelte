@@ -17,7 +17,7 @@
 
 <a href="/" use:link class="block">
   <h1
-    class="text-6xl w-full flex-shrink-0 text-center font-thin p-8 text-orange-600"
+    class="text-3xl md:text-6xl w-full flex-shrink-0 text-center font-light md:font-thin p-8 text-orange-600"
   >
     BORING TODO
   </h1>
@@ -25,9 +25,9 @@
 <div class="overflow-auto w-full h-full flex flex-col lg:w-[800px]">
   <TodoInput />
   <div
-    class="py-5 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-track-gray-100 overflow-y-auto"
+    class="py-5 mx-1 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-track-gray-100 overflow-y-auto"
   >
-    <ul class="list-inside ">
+    <ul class="list-inside">
       {#each $todos as item (item.id)}
         <li>
           <TodoItem
