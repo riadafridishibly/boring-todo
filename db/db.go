@@ -2,8 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 
@@ -158,16 +156,6 @@ func (dao *Dao) Update(id int64, param TodoParams) (*Todo, error) {
 
 	if param.Done.Valid {
 		builder = builder.Set("done", param.Done)
-		if param.Done.Bool { // Done
-			builder = builder.Set("done_at", sql.NullTime{
-				Valid: true,
-				Time:  time.Now(), // UTC maybe?
-			})
-		} else {
-			builder = builder.Set("done_at", sql.NullTime{
-				Valid: false,
-			})
-		}
 	}
 
 	builder = builder.Where("id = ?", id)
@@ -228,57 +216,18 @@ ON todos
 BEGIN
   UPDATE todos SET updated_at=CURRENT_TIMESTAMP WHERE id=NEW.id;
 END;
+
+CREATE TRIGGER IF NOT EXISTS UpdateField_done_at  
+UPDATE OF 
+	done
+ON todos
+BEGIN
+  UPDATE todos 
+  SET done_at = CASE 
+		WHEN NEW.done IS NOT NULL AND NEW.done = 1 
+			THEN CURRENT_TIMESTAMP
+			ELSE NULL
+		END
+  WHERE id=NEW.id;
+END;
 `
-
-func _testMain() {
-	// os.Remove("./foo.db")
-	db, err := sql.Open("sqlite3", "./foo.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	_, err = db.Exec(createTableStmt)
-	if err != nil {
-		log.Printf("%q: %s\n", err, createTableStmt)
-		return
-	}
-
-	// value, err := Create(db, TodoParams{
-	// 	Title:   "Hello World",
-	// 	Content: sql.NullString{String: "Some content", Valid: true},
-	// })
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// pp.Println(value)
-	// value, err = Update(db, 1, TodoParams{
-	// 	// Title:   "Update title",
-	// 	Content: "Update content 77",
-	// 	// ParentId: 9,
-	// 	Done: sql.NullBool{Valid: true, Bool: false},
-	// })
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// pp.Println(value)
-
-	// _, err = Delete(db, 2)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	dao, err := NewDao("foo.db")
-	if err != nil {
-		panic(err)
-	}
-	value, err := dao.Read(5)
-	if err != nil {
-		panic(err)
-	}
-	v, err := json.MarshalIndent(value, "", "   ")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(string(v))
-}
