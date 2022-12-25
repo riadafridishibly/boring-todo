@@ -1,4 +1,8 @@
-const baseAPIURI = "http://localhost:8989/api";
+let baseAPIURI = "http://localhost:8989/api";
+
+if (import.meta.env.PROD) {
+  baseAPIURI = "http://localhost:18989/api";
+}
 
 export const fetchAllTodos = async () => {
   return await (await fetch(baseAPIURI + "/todos")).json();

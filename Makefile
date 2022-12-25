@@ -4,4 +4,4 @@ fronend:
 
 build:
 	go generate ./...
-	go build
+	go build -ldflags="-X main.BuildEnv=prod"

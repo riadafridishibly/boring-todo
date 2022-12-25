@@ -6,6 +6,9 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
+	"os/user"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -16,7 +19,45 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
-const SITE_URL = "http://localhost:8989/"
+var BuildEnv = "dev"
+
+const DEV_SITE_URL = "http://localhost:8989/"
+const PROD_SITE_URL = "http://localhost:18989/"
+
+func appDirectory() string {
+	u, err := user.Current()
+	if err != nil {
+		panic(fmt.Sprintf("couldn't get the user: %v", err))
+	}
+	appPath := filepath.Join(u.HomeDir, ".boring-todo")
+	err = os.MkdirAll(appPath, 0750)
+	if err != nil {
+		panic(fmt.Sprintf("couldn't create app dir: %v", err))
+	}
+	return appPath
+}
+
+func condResult(prod, dev string) string {
+	if BuildEnv == "dev" {
+		return dev
+	}
+	if BuildEnv == "prod" {
+		return prod
+	}
+	panic("Unknown build env")
+}
+
+func siteURL() string {
+	return condResult(PROD_SITE_URL, DEV_SITE_URL)
+}
+
+func serverAddr() string {
+	return condResult(":18989", ":8989")
+}
+
+func dbPath() string {
+	return condResult(filepath.Join(appDirectory(), "todo.db"), "test.db")
+}
 
 func FileServer(r chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
@@ -40,7 +81,7 @@ func FileServer(r chi.Router, path string, root http.FileSystem) {
 func handleOpen(m *systray.MenuItem) {
 	go func() {
 		for range m.ClickedCh {
-			open.Run(SITE_URL)
+			open.Run(siteURL())
 		}
 	}()
 }
@@ -57,9 +98,9 @@ var server *http.Server
 
 func newServer() *http.Server {
 	srv := &http.Server{}
-	srv.Addr = ":8989"
+	srv.Addr = serverAddr()
 
-	todoApi, err := api.NewTodoAPI("test.db")
+	todoApi, err := api.NewTodoAPI(dbPath())
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -10,7 +10,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-	"github.com/k0kubun/pp/v3"
 	"github.com/riadafridishibly/boring-todo/db"
 )
 
@@ -19,8 +18,6 @@ type contextKey struct {
 }
 
 var TodoCtxKey = &contextKey{"todoItem"}
-
-const todoID = "todoID"
 
 type TodoAPI struct {
 	dao *db.Dao
@@ -74,8 +71,6 @@ func (api *TodoAPI) ListTodos(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, ErrRender(err))
 		return
 	}
-
-	pp.Println(len(todos))
 
 	if err := render.RenderList(w, r, NewTodoListResponse(todos)); err != nil {
 		render.Render(w, r, ErrRender(err))
